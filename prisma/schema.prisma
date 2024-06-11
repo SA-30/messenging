@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int        @id @default(autoincrement())
+  name             String
+  email            String     @unique
+  password         String
+  sentMessages     Message[]  @relation("SentMessages")
+  receivedMessages Message[]  @relation("ReceivedMessages")
+  chats            UserChat[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id         Int    @id @default(autoincrement())
+  sender     User   @relation("SentMessages", fields: [senderId], references: [id])
+  receiver   User   @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  chat       Chat   @relation("ChatMessages", fields: [chatId], references: [id])
+  content    String
+  senderId   Int
+  receiverId Int
+  chatId     Int
+
+  latestMessage Chat? @relation("LatestMessage")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chat {
+  id              Int        @id @default(autoincrement())
+  chatName        String
+  isGroupChat     Boolean
+  users           UserChat[]
+  messages        Message[]  @relation("ChatMessages")
+  latestMessageId Int?       @unique
+  latestMessage   Message?   @relation("LatestMessage", fields: [latestMessageId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserChat {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  chatId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, chatId])
+}
