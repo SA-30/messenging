@@ -5,15 +5,18 @@ import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState, ChangeEvent, MouseEvent } from 'react';
+import { toast } from 'react-hot-toast';
+import { getCookie } from '../helpers/cookieHelpers';
 
 const Auth = () => {
     const [isSignUp, setIsSignUp] = useState(true);
     const [data, setData] = useState({ name: "", email: "", password: "" });
     const [loading, setLoading] = useState(false);
-    const [logInStatus, setLogInStatus] = useState<{ msg: string; key: number } | null>(null);
-    const [signInStatus, setSignInStatus] = useState<{ msg: string; key: number } | null>(null);
     
     const navigate = useRouter();
+
+    const token = getCookie("token")
+    if(token) navigate.push('/chatter')
 
     const handleToggle = () => {
         setIsSignUp(!isSignUp);
@@ -29,27 +32,18 @@ const Auth = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const config = {
-                headers: {
-                    "Content-type": "application/json",
-                },
-            };
-            
             const response = await axios.post(
                 "/api/login",
                 data,
             );
 
-            console.log("login: ", response);
-            setSignInStatus({ msg: "Success", key: Math.random() });
-            localStorage.setItem("userData", JSON.stringify(response.data));
-            navigate.push("/chatter");
+            if (response.status === 200) {
+                toast.success("😊 Login successfull!");
+
+                navigate.push("/chatter");
+            }
         } catch (error) {
-            console.error(error);
-            setLogInStatus({
-                msg: "Invalid username or Password",
-                key: Math.random(),
-            });
+            toast.error(`🥺 "Login failed!"`);
         } finally {
             setLoading(false);
         }
@@ -70,28 +64,14 @@ const Auth = () => {
                 data,
             );
 
-            console.log("cli",response);
-            setSignInStatus({ msg: "Success", key: Math.random() });
-            localStorage.setItem("userData", JSON.stringify(response.data));
-            navigate.push("/");
+            if (response.status === 201) {
+                toast.success("😊 User created successfully!");
+
+                setIsSignUp(true)
+            }
         } catch (error: any) {
             console.error(error);
-            if (error.response.status === 405) {
-                setLogInStatus({
-                    msg: "User with this email ID already exists",
-                    key: Math.random(),
-                });
-            } else if (error.response.status === 406) {
-                setLogInStatus({
-                    msg: "Username already taken, please choose another name",
-                    key: Math.random(),
-                });
-            } else {
-                setLogInStatus({
-                    msg: "Registration failed. Please try again.",
-                    key: Math.random(),
-                });
-            }
+                toast.error(`🥺 Login failed! `);
         } finally {
             setLoading(false);
         }
@@ -157,8 +137,6 @@ const Auth = () => {
                         {!isSignUp ? "Login" : "Sign Up"}
                     </a>
                 </span>
-                {logInStatus && <div className="status-message">{logInStatus.msg}</div>}
-                {signInStatus && <div className="status-message">{signInStatus.msg}</div>}
             </div>
         </div>
     );

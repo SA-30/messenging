@@ -9,28 +9,49 @@ import MessageOthers from "./MessageOthers";
 import { useRouter, useSearchParams } from "next/navigation";
 import Skeleton from "@mui/material/Skeleton";
 import axios, { all } from "axios";
+import { getCookie } from "../helpers/cookieHelpers";
 
 function Chatarea() {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [messageContent, setMessageContent] = useState("");
   const [allMessages, setAllMessages] = useState<any>([]);
+  const [userInfo, setUserInfo] = useState<any>(null);
   const [loaded, setloaded] = useState(false);
 
   const messagesEndRef = useRef(null);
   const searchParam = useSearchParams();
   // const [chat_id, chat_user] = searchParam.get("&");
-  console.log("searchParam: ", searchParam);
+  console.log("searchParam userId: ", searchParam.get("userId"));
   // console.log(dyParams._id);
-  const storedData = localStorage.getItem("userData");
-  const userData = storedData ? JSON.parse(storedData) : null;
+  const userData = getCookie("token")
 
-  const chat_id = '123'
-  const chat_user = '456'
+  useEffect(() => {
+    if (userData) {
+      axios.post('/api/getUserData', {
+        token: userData 
+      })
+      .then((response) => {
+        const data = response.data;
+        if (data.userInfo) {
+          setUserInfo(data.userInfo);
+        } else {
+          console.log('Invalid token');
+        }
+      })
+      .catch((error) => {
+        console.error('Error verifying token:', error);
+      });
+    }
+  }, [userData]);
+
+
+  // const chat_id = '123'
+  // const chat_user = '456'
 
   const sendMessage = async () => {
     const config = {
       headers: {
-        Authorization: `Bearer ${userData?.data?.token}`,
+        Authorization: `Bearer ${userData}`,
       },
     };
 
@@ -48,47 +69,47 @@ function Chatarea() {
   //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   // };
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userData?.data?.token}`,
-        },
-      };
+  // useEffect(() => {
+  //   const fetchUsers = async () => {
+  //     const config = {
+  //       headers: {
+  //         Authorization: `Bearer ${userData}`,
+  //       },
+  //     };
 
-      try {
-        const { data } = await axios.get("/message" + chat_id, config);
-        console.log("Data refreshed in Users panel ", data);
-        const messagesWithContent = data?.map((message: any) => {
-          return {
-            ...message,
-            content: message.content || "", // Set to empty string if 'content' is undefined
-          };
-        });
-        setAllMessages(messagesWithContent);
-        setloaded(true);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
+  //     try {
+  //       const { data } = await axios.get("/message" + chat_id, config);
+  //       console.log("Data refreshed in Users panel ", data);
+  //       const messagesWithContent = data?.map((message: any) => {
+  //         return {
+  //           ...message,
+  //           content: message.content || "", // Set to empty string if 'content' is undefined
+  //         };
+  //       });
+  //       setAllMessages(messagesWithContent);
+  //       setloaded(true);
+  //     } catch (error) {
+  //       console.error("Error fetching users:", error);
+  //     }
+  //   };
 
-    fetchUsers();
-  }, [userData?.data?.token, chat_id]);
+  //   fetchUsers();
+  // }, [userData, chat_id]);
 
-  const handleDeleteChat = async () => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userData?.data?.token}`,
-      },
-    };
+  // const handleDeleteChat = async () => {
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${userData}`,
+  //     },
+  //   };
 
-    try {
-      const { data } = await axios.delete(`/chat/${encodeURIComponent(chat_id)}`, config);
-      console.log("Deleted data and res: ", data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   try {
+  //     const { data } = await axios.delete(`/chat/${encodeURIComponent(chat_id)}`, config);
+  //     console.log("Deleted data and res: ", data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   if (!loaded) {
     return (
@@ -181,7 +202,7 @@ function Chatarea() {
 
           {allMessages.map((message: any, index: number) => {
             const sender = message.sender;
-            const self_id = userData.data._id;
+            const self_id = userInfo.id;
             if (sender._id === self_id) {
               return <MessageSelf message={message} key={index} />;
             } else {

@@ -16,8 +16,9 @@ import { useNavigate } from "react-router-dom";
 
 function CreateGroups() {
   const lightTheme = useSelector((state) => state.themeKey);
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  // const userData = JSON.parse(localStorage.getItem("userData"));
   // console.log("Data from LocalStorage : ", userData);
+  const userData = getCookie("token")
   const nav = useNavigate();
   if (!userData) {
     console.log("User not Authenticated");

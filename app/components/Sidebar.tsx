@@ -10,54 +10,57 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NightlightRoundIcon from "@mui/icons-material/NightlightRound";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import SearchIcon from "@mui/icons-material/Search";
-import axios from "axios";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { getCookie } from "../helpers/cookieHelpers";
+import { toast } from 'react-hot-toast';
 
 const Sidebar = () => {
   const [conversations, setConversations] = useState([]);
-  const storedData = localStorage.getItem("userData");
-  const userData = storedData ? JSON.parse(storedData) : null;
+  const userData = getCookie("token")
+  
   const router = useRouter()
 
-  // Function to handle logout
   const handleLogout = () => {
-    localStorage.removeItem("userData");
+    // localStorage.removeItem("userData");
+    Cookies.remove('token') 
+    toast.success("User logged out")
     router.push("/");
   };
 
-  useEffect(() => {
-    // if (!userData) {
-    //   router.push("/");
-    //   return;
-    // }
+  // useEffect(() => {
+  //   // if (!userData) {
+  //   //   router.push("/");
+  //   //   return;
+  //   // }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userData?.data?.token}`,
-      },
-    };
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${userData}`,
+  //     },
+  //   };
 
-    axios
-      .get("/api/fetchChat", config)
-      .then((response) => {
-        console.log("response " ,response);
-        setConversations(response.data);
-      })
-      .catch((error) => {
-        console.log("Error fetching chats: ", error);
-      });
-  }, [userData?.data?.token]);
+  //   axios
+  //     .get("/api/fetchChat", config)
+  //     .then((response) => {
+  //       console.log("response " ,response);
+  //       setConversations(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error fetching chats: ", error);
+  //     });
+  // }, [userData]);
 
-  const renderChatName = (conversation: any) => {
-    if (conversation.isGroupChat) {
-      return conversation.chatName;
-    } else {
-      const otherUser = conversation.users.find(
-        (user: any) => user._id !== userData.data._id
-      );
-      return otherUser ? otherUser.name : "Unknown User";
-    }
-  };
+  // const renderChatName = (conversation: any) => {
+  //   if (conversation.isGroupChat) {
+  //     return conversation.chatName;
+  //   } else {
+  //     const otherUser = conversation.users.find(
+  //       (user: any) => user._id !== userData.data._id
+  //     );
+  //     return otherUser ? otherUser.name : "Unknown User";
+  //   }
+  // };
 
   return (
     <div className="sidebar-container">
@@ -93,7 +96,7 @@ const Sidebar = () => {
       </div>
 
       {/* List of Chats */}
-      <div className={"sb-users dark:dark"}>
+      {/* <div className={"sb-users dark:dark"}>
         {conversations.map((conversation: any, index) => (
           <div
             key={index}
@@ -111,7 +114,7 @@ const Sidebar = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

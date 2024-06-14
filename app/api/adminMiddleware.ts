@@ -20,8 +20,3 @@ export const authenticateToken = async (req: NextRequest) => {
     }
 }
 
-export const checkSuperAdminRole = (decodedToken: any) => {
-    if(decodedToken.role !== 'superadmin'){
-        return NextResponse.json({ message: 'Forbidden', status: 403 });
-    }
-}

@@ -17,7 +17,7 @@ export const generateToken = (user: any) => {
     return jwt.sign({id : userId, name: user.name}, jwtSecret, { expiresIn: '15d' })
 }
 
-export const verifyToken = (token: string) => {
+export const verifyToken = async (token: any) => {
     try {
         return jwt.verify(token, jwtSecret)
     } catch (error) {
