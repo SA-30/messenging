@@ -8,7 +8,6 @@ export async function POST(req: NextRequest) {
 
   try {
     const decodedToken: any = await authenticateToken(req);
-    const decodedUserId = parseInt(decodedToken.id, 10);
 
     if (!decodedToken) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
@@ -33,7 +32,7 @@ export async function POST(req: NextRequest) {
                 id: member.value
               })),
               {
-                id: decodedUserId
+                id: decodedToken.id
               }
             ]
           }
@@ -47,72 +46,47 @@ export async function POST(req: NextRequest) {
     }
 
     const existingConversations = await prisma.conversation.findMany({
-
+      where: {
+        OR: [
+          {
+            userIds: {
+              equals: [decodedToken.id, userId]
+            }
+          },
+          {
+            userIds: {
+              equals: [userId, decodedToken.id]
+            }
+          }
+        ]
+      }
     })
 
+    const singleConversation = existingConversations[0]
 
-    // const existingChat = await prisma.conversation.findFirst({
-    //   where: {
-    //     isGroup: false,
-    //     AND: [
-    //       {
-    //         users: {
-    //           some: {
-    //             userId: decodedUserId
-    //           }
-    //         }
-    //       },
-    //       {
-    //         users: {
-    //           some: {
-    //             userId: userId
-    //           }
-    //         }
-    //       }
-    //     ]
-    //   },
-    //   include: {
-    //     users: true,
-    //     messages: {
-    //       include: {
-    //         sender: {
-    //           select: {
-    //             name: true,
-    //             email: true,
-    //           },
-    //         },
-    //       },
-    //     },
-    //   },
-    // });
+    if (singleConversation){
+      return NextResponse.json(singleConversation)
+    }
 
-    // if (existingChat) {
-    //   return NextResponse.json(existingChat, { status: 200 });
-    // }
+    const newConversation = await prisma.conversation.create({
+      data: {
+        users: {
+          connect: [
+            {
+              id: decodedToken.id,
+            },
+            {
+              id: userId,
+            }
+          ]
+        }
+      },
+      include: {
+        users: true
+      }
+    })
 
-    // const newChat = await prisma.conversation.create({
-    //   data: {
-    //     chatName: `Chat between ${decodedToken.name} and User ${userId}`,
-    //     isGroupChat: false,
-    //     users: {
-    //       create: [{ userId: decodedUserId }, { userId }],
-    //     },
-    //   },
-    //   include: {
-    //     users: true,
-    //     messages: true,
-    //   },
-    // });
-
-    // await prisma.userChat.createMany({
-    //   data: [
-    //     { userId: decodedUserId, chatId: newChat.id },
-    //     { userId, chatId: newChat.id },
-    //   ],
-    // });
-
-    // return NextResponse.json(newChat, { status: 200 });
-    return NextResponse.json("sss", { status: 200 });
+    return NextResponse.json(newConversation)
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });

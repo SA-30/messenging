@@ -39,8 +39,6 @@
 
 .sidebar-container{
   flex: .3;
-  /* border: 2px solid teal;
-  border-radius: 10px; */
   display: flex;
   flex-direction: column;
   

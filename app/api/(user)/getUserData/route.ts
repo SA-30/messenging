@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import Prisma from '../../../lib/prisma'
 import jwt from 'jsonwebtoken'
 
 const jwtSecret = process.env.JWT_SECRET || "thisisverystrongpassword";

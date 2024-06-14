@@ -14,7 +14,7 @@ export const verifyPassword = async (password: string, hasedPassword: string) =>
 
 export const generateToken = (user: any) => {
     const userId = user.id.toString()
-    return jwt.sign({id : userId, name: user.name}, jwtSecret, { expiresIn: '15d' })
+    return jwt.sign({id : userId, email:user.email, name: user.name}, jwtSecret, { expiresIn: '15d' })
 }
 
 export const verifyToken = async (token: any) => {

@@ -20,9 +20,6 @@ function Chatarea() {
 
   const messagesEndRef = useRef(null);
   const searchParam = useSearchParams();
-  // const [chat_id, chat_user] = searchParam.get("&");
-  console.log("searchParam userId: ", searchParam.get("userId"));
-  // console.log(dyParams._id);
   const userData = getCookie("token")
 
   useEffect(() => {
@@ -45,7 +42,7 @@ function Chatarea() {
   }, [userData]);
 
 
-  // const chat_id = '123'
+  const chat_id = searchParam.get("userId")
   // const chat_user = '456'
 
   const sendMessage = async () => {

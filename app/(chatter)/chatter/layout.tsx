@@ -8,12 +8,12 @@ export default function RootLayout({
 }>) {
   return (
     <div className='items-center flex ic justify-center h-screen'>
-        <div className='main-container flex h-[80vh] w-[80vw]'>
-            <div className=''>
-                <Sidebar />
+        <div className='main-container grid grid-cols-10 h-[80vh] w-[80vw]'>
+            <div className='col-span-3'>
+            <Sidebar />
             </div>
-            <div className='w-full'>
-                {children}
+            <div className='col-span-7'>
+              {children}
             </div>
         </div>
     </div>

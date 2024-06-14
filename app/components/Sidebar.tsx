@@ -14,42 +14,40 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { getCookie } from "../helpers/cookieHelpers";
 import { toast } from 'react-hot-toast';
+import ConversationList from "./ConversationList";
+import axios from "axios";
+import { FullConversationType } from "../Types";
 
 const Sidebar = () => {
-  const [conversations, setConversations] = useState([]);
+  const [conversations, setConversations] = useState<FullConversationType[]>([]);
   const userData = getCookie("token")
   
   const router = useRouter()
 
   const handleLogout = () => {
-    // localStorage.removeItem("userData");
     Cookies.remove('token') 
     toast.success("User logged out")
     router.push("/");
   };
 
-  // useEffect(() => {
-  //   // if (!userData) {
-  //   //   router.push("/");
-  //   //   return;
-  //   // }
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userData}`,
+      },
+    };
 
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${userData}`,
-  //     },
-  //   };
-
-  //   axios
-  //     .get("/api/fetchChat", config)
-  //     .then((response) => {
-  //       console.log("response " ,response);
-  //       setConversations(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error fetching chats: ", error);
-  //     });
-  // }, [userData]);
+    axios
+      .get("/api/fetchChat", config)
+      .then((response) => {
+        // console.log(response.data);
+        setConversations(response.data);
+      })
+      .catch((error) => {
+        toast.error("Error fetching conversations")
+        console.log("Error fetching chats: ", error);
+      });
+  }, [userData]);
 
   // const renderChatName = (conversation: any) => {
   //   if (conversation.isGroupChat) {
@@ -96,25 +94,7 @@ const Sidebar = () => {
       </div>
 
       {/* List of Chats */}
-      {/* <div className={"sb-users dark:dark"}>
-        {conversations.map((conversation: any, index) => (
-          <div
-            key={index}
-            onClick={() =>
-              router.push(
-                "/chatter/chat/" + conversation._id + "&" + renderChatName(conversation)
-              )
-            }
-          >
-            <div  className={"conversation-container white dark:black"} >
-              <p className="con-icon">{renderChatName(conversation)[0]}</p>
-              <p className="con-title">{renderChatName(conversation)}</p>
-              <p className="con-lastmessage">{renderChatName(conversation)}</p>
-              <p className="con-timestamp">{renderChatName(conversation)}</p>
-            </div>
-          </div>
-        ))}
-      </div> */}
+      <ConversationList initialItems={conversations}/>
     </div>
   );
 };

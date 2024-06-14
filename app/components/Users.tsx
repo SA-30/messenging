@@ -59,10 +59,7 @@ function Users() {
       config 
     )
     .then((data) => {
-      // console.log("data id ", data.data.id);
-      // console.log("user.id ", user.id);
-      
-      nav.push(`/chatter/chat?userId=${data.data.id}`)
+      nav.push(`/chatter/users?chatId=${data.data.id}`)
     })
   }
 
