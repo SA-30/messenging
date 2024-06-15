@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react'
 import { FullConversationType } from '../Types'
 import PeopleIcon from '@mui/icons-material/People';
-import { useRouter, useSearchParams } from 'next/navigation'
 import ConversationBox from './ConversationBox';
+import { usePathname } from 'next/navigation';
 
 interface ConversationListProps {
     initialItems: FullConversationType[]
@@ -13,9 +13,8 @@ interface ConversationListProps {
 const ConversationList: React.FC<ConversationListProps> = ({initialItems}) => {
     const [items, setItems] = useState<FullConversationType[]>(initialItems)
 
-    const router = useRouter()
-    const searchParam = useSearchParams();
-    const chat_id = searchParam.get("chatId")
+    const pathname = usePathname()
+    const chat_id = pathname.split('/').pop()
 
     useEffect(() => {
         if (initialItems.length > 0) {
@@ -29,13 +28,15 @@ const ConversationList: React.FC<ConversationListProps> = ({initialItems}) => {
                 <p className='font-semibold'>Close Friends</p>
                 <PeopleIcon />
             </div>
-            {items.map((item) => (
-                <ConversationBox 
-                    key={item.id}
-                    data={item}
-                    selected={chat_id === item.id}
-                />
-            ))}
+            <div className='flex flex-col gap-2'>
+                {items.map((item) => (
+                    <ConversationBox 
+                        key={item.id}
+                        data={item}
+                        selected={chat_id === item.id}
+                    />
+                ))}
+            </div>
         </div> 
     )
 }

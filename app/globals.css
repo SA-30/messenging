@@ -54,6 +54,10 @@
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
+.box-shadow1{
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
 .sb-search{
   background-color: white;
   border-radius: 10px;
@@ -66,7 +70,6 @@
 .search-box{
   outline-width: 0;
   border: none;
-  margin-left: 1rem;
 }
 
 .sb-users{
@@ -192,8 +195,6 @@
 
 .input-area {
   background-color: white;
-  padding: 10px;
-  margin: 10px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;

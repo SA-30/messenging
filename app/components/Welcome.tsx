@@ -35,11 +35,11 @@ const Welcome = () => {
   }, [cookie]);
 
   return (
-    <div className="p-[10px] h-full">
-        <div className="Welcome-page dark:dark h-full" >
+    <div className=" py-5 sm:py-[10px] px-[10px] sm:px-[10px]  h-full">
+        <div className="Welcome-page dark:dark h-full p-10" >
             <Image src='/images/Chater.png' alt="Logo" height={200} width={200} />
             <b>Hi, {userInfo?.name}</b>
-            <p>View and text to friends and family.</p>
+            <p className="sm:text-sm text-xs">View and text to friends and family.</p>
         </div>
     </div>
   );

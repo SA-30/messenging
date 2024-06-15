@@ -49,17 +49,6 @@ const Sidebar = () => {
       });
   }, [userData]);
 
-  // const renderChatName = (conversation: any) => {
-  //   if (conversation.isGroupChat) {
-  //     return conversation.chatName;
-  //   } else {
-  //     const otherUser = conversation.users.find(
-  //       (user: any) => user._id !== userData.data._id
-  //     );
-  //     return otherUser ? otherUser.name : "Unknown User";
-  //   }
-  // };
-
   return (
     <div className="sidebar-container">
       {/* Header */}
@@ -90,7 +79,7 @@ const Sidebar = () => {
         <IconButton>
           <SearchIcon />
         </IconButton>
-        <input placeholder="Search" className="search-box" />
+        <input placeholder="Search" className="search-box w-full" />
       </div>
 
       {/* List of Chats */}

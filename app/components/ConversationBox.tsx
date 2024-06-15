@@ -17,9 +17,8 @@ interface ConversationListProps {
 const ConversationBox: React.FC<ConversationListProps> = ({data, selected}) => {
     const [userInfo, setUserInfo] = useState<any>(null);
     const otherUser = useOtherUser(data)
-    const router = useRouter()
-    
     const cookie = getCookie("token");
+    const router = useRouter()
 
     useEffect(() => {
         if (cookie) {
@@ -78,11 +77,10 @@ const ConversationBox: React.FC<ConversationListProps> = ({data, selected}) => {
                 w-full relative
                 flex items-center
                 space-x-3
-                bg-neutral-100
                 hover:bg-neutral-200
                 rounded-lg transition
                 cursor-pointer p-3
-                ${selected ? 'bg-neutral-50': 'bg-white'}
+                ${selected ? 'bg-neutral-200': 'bg-white'}
             `}
         >
             <Avatar user={otherUser}/>
