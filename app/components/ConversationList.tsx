@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FullConversationType } from '../Types'
 import PeopleIcon from '@mui/icons-material/People';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -9,6 +9,11 @@ import ConversationBox from './ConversationBox';
 import { usePathname } from 'next/navigation';
 import GroupChatModel from './GroupChatModel';
 import { User } from '@prisma/client';
+import { pusherClient } from '../lib/pusher';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import config from '../helpers/config';
+import { find } from 'lodash';
 
 interface ConversationListProps {
     initialItems: FullConversationType[];
@@ -21,6 +26,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
 }) => {
     const [items, setItems] = useState<FullConversationType[]>(initialItems)
     const [isModelOpen, setIsModelOpen] = useState(false)
+    const [user, setUser] = useState<any>()
 
     const pathname = usePathname()
     const chat_id = pathname.split('/').pop()
@@ -29,7 +35,58 @@ const ConversationList: React.FC<ConversationListProps> = ({
         if (initialItems.length > 0) {
             setItems(initialItems)
         }
+
+        axios
+        .get("/api/getCurrentUser", config)
+        .then((response) => {
+            setUser(response.data.data)
+        })
+        .catch((error) => {
+            toast.error("Error fetching conversations")
+        });
     }, [initialItems])
+
+    const pusherKey = useMemo(() => {
+        return user?.email
+    }, [user?.email])
+
+    useEffect(() => {
+        if(!pusherKey) return
+
+        const newHandler = (conversation: FullConversationType) => {
+            setItems(current => {
+              if(find(current, {id: conversation.id}))  {
+                return current;
+              }
+
+              return [conversation, ...current]
+            })
+        }
+
+        const updateHandler = (conversation: FullConversationType) => {
+            setItems(current => current.map(currentConversation => {
+                if(currentConversation.id === conversation.id) {
+                    return {
+                        ...currentConversation,
+                        messages: conversation.messages,
+                    }
+                }
+
+                return currentConversation
+            }))
+        }
+        
+        pusherClient.subscribe(pusherKey)
+        pusherClient.bind('conversation:new', newHandler)
+        pusherClient.bind('conversation:update', updateHandler)
+
+
+        return () => {
+            pusherClient.unsubscribe(pusherKey)
+            pusherClient.unbind('conversation:new', newHandler)
+            pusherClient.unbind('conversation:update', updateHandler)
+        }
+    }, [pusherKey])
 
     return (
         <>

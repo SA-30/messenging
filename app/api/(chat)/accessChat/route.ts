@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateToken } from "../../adminMiddleware";
 import prisma from '../../../lib/prisma'
+import { pusherServer } from "@/app/lib/pusher";
 
 export async function POST(req: NextRequest) {
   const { userId, isGroup, members, name } = await req.json();
@@ -39,6 +40,12 @@ export async function POST(req: NextRequest) {
         },
         include: {
           users: true
+        }
+      })
+
+      newConversation.users.forEach((user) => {
+        if(user.email) {
+          pusherServer.trigger(user.email, 'conversation:new', newConversation)
         }
       })
 
@@ -83,6 +90,12 @@ export async function POST(req: NextRequest) {
       },
       include: {
         users: true
+      }
+    })
+
+    newConversation.users.map((user) => {
+      if(user.email) {
+        pusherServer.trigger(user.email, 'conversation:new', newConversation)
       }
     })
 

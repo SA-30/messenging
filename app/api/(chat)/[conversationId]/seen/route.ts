@@ -1,6 +1,7 @@
 import { authenticateToken } from "../../../adminMiddleware";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from '../../../../lib/prisma'
+import { pusherServer } from "@/app/lib/pusher";
 
 interface IParams {
     conversationId?: string;
@@ -61,6 +62,17 @@ export async function POST (
                 }
             }
         })
+
+        await pusherServer.trigger(decodedToken.email, 'conversation:update', {
+            id: conversationId,
+            messages: [updateMessage],
+        })
+
+        if (lastMessage.seenIds.indexOf(decodedToken.id) !== -1) {
+            return NextResponse.json(conversation)
+        }
+
+        await pusherServer.trigger(conversationId!, 'message:update', updateMessage)
 
         return NextResponse.json(updateMessage)
     } catch (error) {
