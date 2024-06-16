@@ -3,7 +3,7 @@ import prisma from '@/app/lib/prisma';
 import { authenticateToken } from '../../adminMiddleware';
 
 export async function POST(req: NextRequest) {
-    const { ChatId } = await req.json()
+    const { chatId } = await req.json()
     
     const decodedToken: any = authenticateToken(req);
     if (!decodedToken) {
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     try {
         const messages = await prisma.message.findMany({
             where: {
-                conversationId: ChatId,
+                conversationId: chatId,
             },
             include: {
                 sender: true,

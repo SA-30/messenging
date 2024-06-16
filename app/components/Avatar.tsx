@@ -20,6 +20,15 @@ const Avatar: React.FC<AvatarProps> = ({ user, size }) => {
                     'md:size-9' : 
                     ''
                 }
+                ${size === 'smaller' ?
+                    'md:size-7' :
+                    ''
+                }
+                ${size === 'profile' ?
+                    'md:size-6' :
+                    ''
+                }
+                
             `}
         >
             <Image 

@@ -1,19 +1,13 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { getCookie } from "../helpers/cookieHelpers";
 import axios from "axios";
 
 const Welcome = () => {
   const [userInfo, setUserInfo] = useState<any>(null);
-  const nav = useRouter();
-
   const cookie = getCookie("token");
-  // if (!cookie) {
-  //   nav.push("/");
-  // }
 
   useEffect(() => {
     if (cookie) {

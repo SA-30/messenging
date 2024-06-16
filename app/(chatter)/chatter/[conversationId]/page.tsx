@@ -43,6 +43,7 @@ const Conversation = ({ params }: { params: IParams }) => {
         const response = await axios.post("/api/fetchChatById", { chatId: conversationId }, config);
         const response2 = await axios.post("/api/fetchAllMessages", { chatId: conversationId }, config);
         setConversation(response.data);
+        
         setMessages(response2.data)
       } catch (err: any) {
         setError(err.response ? err.response.data.message : err.message);
@@ -63,7 +64,7 @@ const Conversation = ({ params }: { params: IParams }) => {
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          gap: "20px",
+          gap: "10px",
         }}
       >
         <Skeleton
@@ -89,10 +90,12 @@ const Conversation = ({ params }: { params: IParams }) => {
   if (error) return <div></div>;
 
   return (
-    <div className="h-full w-full flex flex-col justify-between gap-[20px] p-[12px]">
+    <div className="w-full flex flex-col justify-between gap-[10px] p-[12px] md:h-[90vh]">
       {conversation && <Header conversation={conversation}/>}
-      <Body />
-      <Form conversationId={conversationId}/>
+      <Body initialMessages={messages} conversationId={conversationId}/>
+      <div className='h-[60px]'>
+        <Form conversationId={conversationId}/>
+      </div>
     </div>
   );
 };

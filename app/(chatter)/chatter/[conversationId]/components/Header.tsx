@@ -5,8 +5,9 @@ import { Conversation, User } from '@prisma/client'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Link from 'next/link'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Avatar from '@/app/components/Avatar';
+import ProfileDrawer from './ProfileDrawer';
 
 export interface HeaderProps {
     conversation: Conversation & {
@@ -17,6 +18,7 @@ export interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ 
     conversation
 }) => {
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const otherUser = useOtherUser(conversation)
   
   const statusText = useMemo(() => {
@@ -28,6 +30,12 @@ const Header: React.FC<HeaderProps> = ({
   }, [conversation])
 
   return (
+   <>
+    <ProfileDrawer 
+      data={conversation}
+      isOpen={drawerOpen}
+      onClose={() => setDrawerOpen(false)}
+    />
     <div
       className='
         bg-white w-full flex
@@ -67,6 +75,7 @@ const Header: React.FC<HeaderProps> = ({
             </div>
         </div>
         <MoreHorizIcon 
+          onClick={() => setDrawerOpen(true)}
           className='
             size-8 transition 
             text-gray-500 
@@ -75,6 +84,7 @@ const Header: React.FC<HeaderProps> = ({
           '
         />
     </div>
+   </>
   )
 }
 

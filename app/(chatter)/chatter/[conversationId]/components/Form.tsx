@@ -52,7 +52,6 @@ const Form = ({conversationId}: {conversationId: string}) => {
         className='
             flex 
             items-center 
-            h-[60px] 
             rounded-[10px]
     '>
         <CldUploadButton

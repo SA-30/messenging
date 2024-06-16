@@ -7,7 +7,6 @@ export async function GET(req: NextRequest) {
   if (!decodedToken) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
-  // const decodedUserId = parseInt(decodedToken.id, 10);
 
   if(!decodedToken.id) {
     return NextResponse.json([]);
