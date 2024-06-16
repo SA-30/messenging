@@ -1,8 +1,12 @@
+'use client'
+
 import { FullMessageType } from "@/app/Types";
 import Avatar from "@/app/components/Avatar";
+import ImageModel from "@/app/components/ImageModel";
 import useUserData from "@/app/hooks/useUserData";
 import { format } from "date-fns";
 import Image from "next/image";
+import { useState } from "react";
 
 interface IMessageBox {
     data: FullMessageType;
@@ -13,6 +17,7 @@ const MessageBox: React.FC<IMessageBox> = ({
     data,
     isLast,
  }) => {
+    const [imageModelOpen, setImageModelOpen] = useState(false)
     const userData = useUserData()
     const isOwn = userData?.email === data?.sender?.email
     const seenList = (data.seen || [])
@@ -43,8 +48,14 @@ const MessageBox: React.FC<IMessageBox> = ({
                     </div>
                 </div>
                 <div className={message}>
+                    <ImageModel
+                        src={data.image}
+                        isOpen={imageModelOpen}
+                        onClose={() => setImageModelOpen(false)}
+                    />
                     {data.image ? (
                         <Image 
+                            onClick={() => setImageModelOpen(true)}
                             alt="Image"
                             height='100'
                             width='100'
