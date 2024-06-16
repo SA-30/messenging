@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({
         return `${conversation.users.length} members `
     }
 
-    return 'Active'
+    return 'Unknown'
   }, [conversation])
 
   return (

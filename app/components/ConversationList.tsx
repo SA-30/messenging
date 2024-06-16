@@ -6,7 +6,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { IconButton } from "@mui/material";
 import ConversationBox from './ConversationBox';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import GroupChatModel from './GroupChatModel';
 import { User } from '@prisma/client';
 import { pusherClient } from '../lib/pusher';
@@ -28,6 +28,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
     const [isModelOpen, setIsModelOpen] = useState(false)
     const [user, setUser] = useState<any>()
 
+    const router = useRouter()
     const pathname = usePathname()
     const chat_id = pathname.split('/').pop()
 
@@ -75,18 +76,31 @@ const ConversationList: React.FC<ConversationListProps> = ({
                 return currentConversation
             }))
         }
+
+        const removeHandler = (conversation: FullConversationType) => {
+            setItems(current => 
+                current.filter(currentConversation => 
+                    currentConversation.id !== conversation.id
+                )
+            )
+
+            if(chat_id === conversation.id){
+                router.push('/chatter')
+            }
+        }
         
         pusherClient.subscribe(pusherKey)
         pusherClient.bind('conversation:new', newHandler)
         pusherClient.bind('conversation:update', updateHandler)
-
+        pusherClient.bind('conversation:delete', removeHandler)
 
         return () => {
             pusherClient.unsubscribe(pusherKey)
             pusherClient.unbind('conversation:new', newHandler)
             pusherClient.unbind('conversation:update', updateHandler)
+            pusherClient.unbind('conversation:delete', removeHandler)
         }
-    }, [pusherKey])
+    }, [pusherKey, chat_id, router])
 
     return (
         <>

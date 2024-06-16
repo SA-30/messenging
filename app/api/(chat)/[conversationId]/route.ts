@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from '../../../lib/prisma'
 import { authenticateToken } from "../../adminMiddleware";
+import { pusherServer } from "@/app/lib/pusher";
 
 interface IParams {
     conversationId: string;
@@ -36,6 +37,12 @@ export async function DELETE(
                 userIds: {
                     hasSome: [decodedToken.id]
                 }
+            }
+        })
+
+        existingConversation.users.forEach(user => {
+            if(user.email){
+                pusherServer.trigger(user.email, 'conversation:remove', existingConversation)
             }
         })
 

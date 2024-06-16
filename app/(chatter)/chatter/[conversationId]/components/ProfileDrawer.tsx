@@ -37,7 +37,7 @@ const ProfileDrawer: React.FC<IProfileDrawer> = ({data, isOpen, onClose}) => {
         return `${data.users.length} members `
     }
 
-    return 'Active'
+    return 'Unknown'
   },[data])
 
   return (
