@@ -1,12 +1,10 @@
 'use client'
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../globals.css";
 import { IconButton } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NightlightRoundIcon from "@mui/icons-material/NightlightRound";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import SearchIcon from "@mui/icons-material/Search";
@@ -19,11 +17,11 @@ import axios from "axios";
 import { FullConversationType } from "../Types";
 import config from "../helpers/config";
 import Avatar from '@/app/components/Avatar'
-import { User } from "@prisma/client";
 import SettingModal from "./SettingModal";
 
 const Sidebar = () => {
   const [conversations, setConversations] = useState<FullConversationType[]>([]);
+  const [users, setUsers] = useState<any>()
   const [user, setUser] = useState<any>()
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
@@ -53,6 +51,17 @@ const Sidebar = () => {
         toast.error("Error fetching conversations")
         console.log("Error fetching chats: ", error);
       });
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data } = await axios.get("/api/fetchUsers", config);
+        setUsers(data);
+      } catch (error){ console.error("Error fetching users:", error)}
+    };
+
+    fetchUsers();
   }, []);
 
   return (
@@ -96,7 +105,10 @@ const Sidebar = () => {
         </div>
 
         {/* List of Chats */}
-        <ConversationList initialItems={conversations}/>
+        <ConversationList 
+          users={users}
+          initialItems={conversations}
+        />
       </div>
     </>
   );

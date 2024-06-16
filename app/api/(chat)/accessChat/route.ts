@@ -13,12 +13,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!userId) {
+    if (!userId && !isGroup) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    if (isGroup && (!members || members.length < 2 || !name)) {
-      return NextResponse.json("Invalid data", { status: 401 });
+    if (isGroup && (!members || members.length < 1 || !name)) {
+      return NextResponse.json("Invalid data", { status: 400 });
     }
 
     if (isGroup) {

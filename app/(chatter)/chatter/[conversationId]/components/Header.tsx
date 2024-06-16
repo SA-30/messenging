@@ -7,11 +7,12 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Link from 'next/link'
 import React, { useMemo, useState } from 'react'
 import Avatar from '@/app/components/Avatar';
+import AvatarGroup from '@/app/components/AvatarGroup';
 import ProfileDrawer from './ProfileDrawer';
 
 export interface HeaderProps {
     conversation: Conversation & {
-        users: User[]
+      users: User[]
     }
 }
 
@@ -56,7 +57,10 @@ const Header: React.FC<HeaderProps> = ({
             >
                 <KeyboardArrowLeftIcon />
             </Link>
-            <Avatar user={otherUser} size="small"/>
+            {conversation.isGroup ? 
+              <AvatarGroup users={conversation.users} /> :
+              <Avatar user={otherUser} size="small"/>
+            }
             <div
               className='flex flex-col'
             >
