@@ -18,9 +18,12 @@ import { FullConversationType } from "../Types";
 import config from "../helpers/config";
 import Avatar from '@/app/components/Avatar'
 import SettingModal from "./SettingModal";
+import DarkModeSwitcher from "./DarkModeSwitcher";
+import useColorMode from "../hooks/useColorMode";
 
 const Sidebar = () => {
   const [conversations, setConversations] = useState<FullConversationType[]>([]);
+  const [colorMode, setColorMode] = useColorMode();
   const [users, setUsers] = useState<any>()
   const [user, setUser] = useState<any>()
   const [isOpen, setIsOpen] = useState(false)
@@ -83,16 +86,12 @@ const Sidebar = () => {
               <ExitToAppIcon className={"dark:dark"}/>
             </IconButton>
           </div>
-          <div >
+          <div className="flex items-center">
             <IconButton onClick={() => router.push("/chatter/users")}>
               <PersonAddIcon className={"dark:dark"} />
             </IconButton>
-            {/* <IconButton onClick={() => navigate("create-groups")}>
-              <AddCircleIcon />
-            </IconButton> */}
-            <IconButton>
-              {"dark" ? <NightlightRoundIcon /> : <LightModeIcon  className={"dark:dark"}/>}
-            </IconButton>
+
+            <DarkModeSwitcher />
           </div>
         </div>
 
