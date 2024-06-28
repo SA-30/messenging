@@ -80,7 +80,7 @@ const Sidebar = () => {
       />
       <div className="">
         {/* Header */}
-        <div className={"sb-header dark:bg-[#333333] "}>
+        <div className={"sb-header dark:bg-[#333333] dark:shadow-sm"}>
           <div className="">
             <IconButton onClick={() => setIsOpen(true)}>
               <Avatar size="profile" user={user} />
@@ -100,13 +100,17 @@ const Sidebar = () => {
         </div>
 
         {/* Search Bar */}
-        <div className={"sb-search dark:text-white dark:bg-[#333333]"}>
+        <div
+          className={
+            "sb-search dark:text-white dark:bg-[#333333] dark:shadow-sm"
+          }
+        >
           <IconButton className="">
             <SearchIcon className="dark:text-white" />
           </IconButton>
           <input
             placeholder="Search"
-            className="search-box w-full dark:bg-[#333333]"
+            className="search-box w-full dark:bg-[#333333] dark:shadow-sm"
           />
         </div>
 
