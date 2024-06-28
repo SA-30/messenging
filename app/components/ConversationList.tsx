@@ -109,11 +109,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
                 isOpen={isModelOpen}
                 onClose={() => setIsModelOpen(false)}
             />
-            <div className={"sb-users dark:dark"}>
+            <div className={"sb-users dark:bg-[#333333]"}>
                 <div className=' text-sm text-[#808080] flex justify-between items-center pb-5'>
                     <p className='font-semibold'>Close Friends</p>
                     <IconButton onClick={() => setIsModelOpen(true)}>
-                        <GroupAddIcon />
+                        <GroupAddIcon className='dark:text-white'/>
                     </IconButton>
                 </div>
                 <div className='flex flex-col gap-2'>

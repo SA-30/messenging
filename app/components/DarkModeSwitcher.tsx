@@ -15,7 +15,7 @@ const DarkModeSwitcher = () => {
   return (
     <div>
       <IconButton onClick={handleTheme}>
-        {colorMode === 'light'? <NightlightRoundIcon /> : <LightModeIcon  className={"dark:dark"}/>}
+        {colorMode === 'light'? <NightlightRoundIcon /> : <LightModeIcon  className={"dark:text-white"}/>}
       </IconButton>
       {/* <label
         className={`relative m-0 block h-7.5 w-14 rounded-full ${

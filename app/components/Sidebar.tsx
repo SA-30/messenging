@@ -76,19 +76,19 @@ const Sidebar = () => {
       />
       <div className="">
         {/* Header */}
-        <div className={"sb-header dark:dark"}>
-          <div>
+        <div className={"sb-header dark:bg-[#333333] "}>
+          <div className="">
             <IconButton onClick={() => setIsOpen(true)}>
               <Avatar size="profile" user={user}/>
               {/* <AccountCircleIcon className={ " dark:dark"}/> */}
             </IconButton>
             <IconButton onClick={handleLogout}>
-              <ExitToAppIcon className={"dark:dark"}/>
+              <ExitToAppIcon className="dark:text-white"/>
             </IconButton>
           </div>
           <div className="flex items-center">
             <IconButton onClick={() => router.push("/chatter/users")}>
-              <PersonAddIcon className={"dark:dark"} />
+              <PersonAddIcon className={"dark:text-white"} />
             </IconButton>
 
             <DarkModeSwitcher />
@@ -96,11 +96,11 @@ const Sidebar = () => {
         </div>
 
         {/* Search Bar */}
-        <div className={"sb-search dark:dark"}>
-          <IconButton>
-            <SearchIcon />
+        <div className={"sb-search dark:text-white dark:bg-[#333333]"}>
+          <IconButton className="">
+            <SearchIcon className="dark:text-white"/>
           </IconButton>
-          <input placeholder="Search" className="search-box w-full" />
+          <input placeholder="Search" className="search-box w-full dark:bg-[#333333]" />
         </div>
 
         {/* List of Chats */}
