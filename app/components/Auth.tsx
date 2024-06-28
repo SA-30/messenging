@@ -83,7 +83,7 @@ const Auth = () => {
                 <Image height={200} width={200} className="logo" src='/images/Chater.png' alt="Logo" />
             </div>
             <div className="login-rightside-container">
-                <h2>
+                <h2 className='font-bold'>
                     {!isSignUp ? "Register your Account" : "Login to your Account"}
                 </h2>
                 {!isSignUp &&
@@ -128,11 +128,11 @@ const Auth = () => {
                 >
                     {isSignUp ? "LOGIN" : "SIGN UP"}
                 </Button>
-                <span>
+                <span className='font-bold text-black text-sm'>
                     {!isSignUp
                         ? "Already have an Account? "
                         : "Don't have an Account? "}
-                    <a href="#" onClick={handleToggle}>
+                    <a href="#" className='font-bold text-black text-sm underline' onClick={handleToggle}>
                         {" "}
                         {!isSignUp ? "Login" : "Sign Up"}
                     </a>
