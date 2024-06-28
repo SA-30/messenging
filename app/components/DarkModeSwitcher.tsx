@@ -1,21 +1,25 @@
-import useColorMode from '../hooks/useColorMode';
+import useColorMode from "../hooks/useColorMode";
 import NightlightRoundIcon from "@mui/icons-material/NightlightRound";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import { IconButton } from '@mui/material';
+import { IconButton } from "@mui/material";
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode();
 
   const handleTheme = () => {
-    if (typeof setColorMode === 'function') {
-      setColorMode(colorMode === 'light'? 'dark' : 'light');
+    if (typeof setColorMode === "function") {
+      setColorMode(colorMode === "light" ? "dark" : "light");
     }
   };
 
   return (
     <div>
       <IconButton onClick={handleTheme}>
-        {colorMode === 'light'? <NightlightRoundIcon /> : <LightModeIcon  className={"dark:text-white"}/>}
+        {colorMode === "light" ? (
+          <NightlightRoundIcon />
+        ) : (
+          <LightModeIcon className={"dark:text-white"} />
+        )}
       </IconButton>
       {/* <label
         className={`relative m-0 block h-7.5 w-14 rounded-full ${
