@@ -264,7 +264,7 @@
 /* LOGIN CONTAINER */
 
 .login-container {
-  background-color: #005656;
+  background-color: rgba(19, 8, 27, 0.701);
   height: 90vh;
   width: 90vw;
   display: flex;
@@ -293,7 +293,7 @@
 }
 
 #login-button {
-  background-color: #43bea1;
+  background-color: rgba(19, 8, 27, 0.701);
   padding: 10px 40px;
   margin: 30px 0 25px 0;
 }
@@ -305,7 +305,7 @@ h2 {
 
 a {
   text-decoration: none;
-  color: #43bea1;
+  color: rgba(19, 8, 27, 0.701);
   font-weight: bold;
   margin: 10px 0;
   font-size: 18px;
