@@ -51,10 +51,6 @@ const ProfileDrawer: React.FC<IProfileDrawer> = ({ data, isOpen, onClose }) => {
         isOpen={conformOpen}
         onClose={() => setConformOpen(false)}
       />
-      {/* <div className="bg-red-500 p-5 ">
-                <p className="text-black">Hello World!!!</p>
-            </div>
-        </ConformModel> */}
       <Transition show={isOpen} as={Fragment}>
         <Dialog
           as="div"
@@ -95,7 +91,7 @@ const ProfileDrawer: React.FC<IProfileDrawer> = ({ data, isOpen, onClose }) => {
                       className="
                         flex h-full flex-col 
                         overflow-y-scroll 
-                        bg-white py-6 shadow-xl
+                        bg-white dark:bg-[#111111] py-6 shadow-xl
                     "
                     >
                       <div className="px-4 sm:px-6">
@@ -108,13 +104,16 @@ const ProfileDrawer: React.FC<IProfileDrawer> = ({ data, isOpen, onClose }) => {
                                 text-gray-400 
                                 hover:text-gray-500
                                 focus:outline-none
-                                focus:ring-2
+                                focus:ring-2 dark:bg-transparent
                                 focus:ring-orange-500
                                 focus:ring-offset-2
                             "
                             >
                               <span className="sr-only">Close panel</span>
-                              <IconButton onClick={onClose}>
+                              <IconButton
+                                className="dark:text-gray-200"
+                                onClick={onClose}
+                              >
                                 <CloseIcon />
                               </IconButton>
                             </button>
@@ -139,11 +138,11 @@ const ProfileDrawer: React.FC<IProfileDrawer> = ({ data, isOpen, onClose }) => {
                               onClick={() => {}}
                               className="flex flex-col gap-3 cursor-pointer items-center hover:opacity-75"
                             >
-                              <div className="size-10 mt-5 bg-neutral-100 rounded-full flex items-center justify-center">
+                              <div className="size-10 mt-5 bg-neutral-100 dark:bg-[#333333] rounded-full flex items-center justify-center">
                                 <IconButton
                                   onClick={() => setConformOpen(true)}
                                 >
-                                  <DeleteOutlineIcon />
+                                  <DeleteOutlineIcon className="text-rose-500" />
                                 </IconButton>
                               </div>
                             </div>
@@ -155,12 +154,11 @@ const ProfileDrawer: React.FC<IProfileDrawer> = ({ data, isOpen, onClose }) => {
                                   <dt className="text-sm mb-5 font-medium sm:flex-shrink-0 sm:w-40 text-gray-500">
                                     Users
                                   </dt>
-                                  <dd className="mt-1 flex gap-5 flex-wrap text-sm text-gray-900 sm:col-span-2">
-                                    {/* { data.users.map((user) => user.name).join(', ') } */}
+                                  <dd className="mt-1 flex gap-5 flex-wrap text-sm text-gray-900 dark:text-gray-300 sm:col-span-2">
                                     {data.users.map((user) => (
                                       <div key={user.id}>
                                         <Avatar user={user} size="small" />
-                                        <p className="bg-gray-50 text-center mt-1 rounded">
+                                        <p className="bg-gray-50 dark:bg-[#222222] text-center mt-1 rounded">
                                           {user.name}
                                         </p>
                                       </div>
@@ -168,22 +166,12 @@ const ProfileDrawer: React.FC<IProfileDrawer> = ({ data, isOpen, onClose }) => {
                                   </dd>
                                 </div>
                               )}
-                              {/* {data.isGroup && (
-                                <div>
-                                    <dt className="text-sm font-medium sm:flex-shrink-0 sm:w-40 text-gray-500"> 
-                                        Users Emails
-                                    </dt>
-                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                                        { data.users.map((user) => user.email).join(', ') }
-                                    </dd>
-                                </div>
-                            )} */}
                               {!data.isGroup && (
                                 <div>
                                   <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                     Email
                                   </dt>
-                                  <dd className="text-sm mt-1 text-gray-900 sm:col-span-2">
+                                  <dd className="text-sm mt-1 text-gray-900 dark:text-gray-200 sm:col-span-2">
                                     {otherUser.email}
                                   </dd>
                                 </div>
@@ -195,7 +183,7 @@ const ProfileDrawer: React.FC<IProfileDrawer> = ({ data, isOpen, onClose }) => {
                                     <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                       Joined
                                     </dt>
-                                    <dd className="text-sm mt-1 text-gray-900 sm:col-span-2">
+                                    <dd className="text-sm mt-1 text-gray-900 dark:text-gray-200 sm:col-span-2">
                                       <time dateTime={joinedData}>
                                         {joinedData}
                                       </time>
