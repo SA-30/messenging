@@ -7,6 +7,7 @@ import axios from "axios";
 import { pusherClient } from "@/app/lib/pusher";
 import { find } from "lodash";
 import config from "@/app/helpers/config";
+import useUserData from "@/app/hooks/useUserData";
 
 interface IBody {
   initialMessages: FullMessageType[];
@@ -16,6 +17,7 @@ interface IBody {
 const Body: React.FC<IBody> = ({ initialMessages, conversationId }) => {
   const [messages, setMessages] = useState<FullMessageType[]>(initialMessages);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const userData = useUserData();
 
   useEffect(() => {
     axios.post(`/api/${conversationId}/seen`, {}, config);
@@ -23,10 +25,9 @@ const Body: React.FC<IBody> = ({ initialMessages, conversationId }) => {
 
   useEffect(() => {
     pusherClient.subscribe(conversationId);
-    // bottomRef?.current?.scrollIntoView({ behavior: "smooth" })
     bottomRef?.current?.scrollIntoView();
 
-    const hadleMessage = (message: FullMessageType) => {
+    const handleMessage = (message: FullMessageType) => {
       axios.post(`/api/${conversationId}/seen`, {}, config);
 
       setMessages((current) => {
@@ -34,10 +35,14 @@ const Body: React.FC<IBody> = ({ initialMessages, conversationId }) => {
           return current;
         }
 
+        // Mark the message as own if it is sent by the current user
+        if (message.sender.email === userData?.email) {
+          message.isOwn = true;
+        }
+
         return [...current, message];
       });
 
-      // bottomRef?.current?.scrollIntoView({ behavior: "smooth" })
       bottomRef?.current?.scrollIntoView();
     };
 
@@ -52,17 +57,17 @@ const Body: React.FC<IBody> = ({ initialMessages, conversationId }) => {
       );
     };
 
-    pusherClient.bind("messages:new", hadleMessage);
+    pusherClient.bind("messages:new", handleMessage);
     pusherClient.bind("message:update", updateHandleMessage);
 
     return () => {
       pusherClient.unsubscribe(conversationId);
-      pusherClient.unbind("messages:new", hadleMessage);
+      pusherClient.unbind("messages:new", handleMessage);
     };
-  }, [conversationId]);
+  }, [conversationId, userData?.email]);
 
   return (
-    <div className="rounded-[10px] dark:bg-[#333333]  hide-scrollbar overflow-y-auto  md:h-full bg-white">
+    <div className="rounded-[10px] dark:bg-[#333333] hide-scrollbar overflow-y-auto md:h-full bg-white">
       {messages.map((message, i) => (
         <MessageBox
           key={message.id}

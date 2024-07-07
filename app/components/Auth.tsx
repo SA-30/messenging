@@ -1,145 +1,147 @@
-'use client'
+"use client";
 
-import { Button, TextField } from '@mui/material';
-import axios from 'axios';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import React, { useState, ChangeEvent, MouseEvent } from 'react';
-import { toast } from 'react-hot-toast';
-import { getCookie } from '../helpers/cookieHelpers';
+import { Button, TextField } from "@mui/material";
+import axios from "axios";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React, { useState, ChangeEvent, MouseEvent } from "react";
+import { toast } from "react-hot-toast";
+import { getCookie } from "../helpers/cookieHelpers";
 
 const Auth = () => {
-    const [isSignUp, setIsSignUp] = useState(true);
-    const [data, setData] = useState({ name: "", email: "", password: "" });
-    const [loading, setLoading] = useState(false);
-    
-    const navigate = useRouter();
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [data, setData] = useState({ name: "", email: "", password: "" });
+  const [loading, setLoading] = useState(false);
 
-    const token = getCookie("token")
-    if(token) navigate.push('/chatter')
+  const navigate = useRouter();
 
-    const handleToggle = () => {
-        setIsSignUp(!isSignUp);
-        setData({ name: "", email: "", password: "" });
-    };
+  const token = getCookie("token");
+  if (token) navigate.push("/chatter");
 
-    const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setData({ ...data, [e.target.name]: e.target.value });
-        
-    };
+  const handleToggle = () => {
+    setIsSignUp(!isSignUp);
+    setData({ name: "", email: "", password: "" });
+  };
 
-    const loginHandler = async (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const response = await axios.post(
-                "/api/login",
-                data,
-            );
+  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
 
-            if (response.status === 200) {
-                toast.success("😊 Login successfull!");
+  const loginHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post("/api/login", data);
 
-                navigate.push("/chatter");
-            }
-        } catch (error) {
-            toast.error(`🥺 "Login failed!"`);
-        } finally {
-            setLoading(false);
-        }
-    };
+      if (response.status === 200) {
+        toast.success("😊 Login successfull!");
 
-    const signUpHandler = async (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const config = {
-                headers: {
-                    "Content-type": "application/json",
-                },
-            };
+        navigate.push("/chatter");
+      }
+    } catch (error) {
+      toast.error(`🥺 "Login failed!"`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            const response = await axios.post(
-                "/api/register",
-                data,
-            );
+  const signUpHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
 
-            if (response.status === 201) {
-                toast.success("😊 User created successfully!");
+      const response = await axios.post("/api/register", data);
 
-                setIsSignUp(true)
-            }
-        } catch (error: any) {
-            console.error(error);
-                toast.error(`🥺 Login failed! `);
-        } finally {
-            setLoading(false);
-        }
-    };
+      if (response.status === 201) {
+        toast.success("😊 User created successfully!");
 
-    return (
-        <div className="login-container">
-            <div className="login-leftside-container">
-                <Image height={200} width={200} className="logo" src='/images/Chater.png' alt="Logo" />
-            </div>
-            <div className="login-rightside-container">
-                <h2 className='font-bold'>
-                    {!isSignUp ? "Register your Account" : "Login to your Account"}
-                </h2>
-                {!isSignUp &&
-                    <>
-                        <TextField
-                            onChange={changeHandler}
-                            name="name"
-                            value={data.name}
-                            id="outlined-basic"
-                            label="Username"
-                            variant="outlined"
-                            />
-                        <br />
-                    </>
-                }
-                
-                <TextField
-                    onChange={changeHandler}
-                    name="email"
-                    value={data.email}
-                    id="outlined-basic"
-                    label="Email"
-                    variant="outlined"
-                />
-                <br />
+        setIsSignUp(true);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(`🥺 Login failed! `);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                <TextField
-                    onChange={changeHandler}
-                    name="password"
-                    value={data.password}
-                    id="outlined-basic"
-                    label="Password"
-                    type="password"
-                    variant="outlined"
-                    autoComplete="current-password"
-                />
-                <br />
-                <Button
-                    onClick={isSignUp ? loginHandler : signUpHandler}
-                    id="login-button"
-                    variant="contained"
-                >
-                    {isSignUp ? "LOGIN" : "SIGN UP"}
-                </Button>
-                <span className='font-bold text-black text-sm'>
-                    {!isSignUp
-                        ? "Already have an Account? "
-                        : "Don't have an Account? "}
-                    <a href="#" className='font-bold text-black text-sm underline' onClick={handleToggle}>
-                        {" "}
-                        {!isSignUp ? "Login" : "Sign Up"}
-                    </a>
-                </span>
-            </div>
-        </div>
-    );
+  return (
+    <div className="login-container bg-gray-800/70 h-[90vh] w-[90vw] flex">
+      <div className="login-leftside-container">
+        <Image
+          height={200}
+          width={200}
+          className="logo"
+          src="/images/Chater.png"
+          alt="Logo"
+        />
+      </div>
+      <div className="login-rightside-container">
+        <h2 className="font-bold">
+          {!isSignUp ? "Register your Account" : "Login to your Account"}
+        </h2>
+        {!isSignUp && (
+          <>
+            <TextField
+              onChange={changeHandler}
+              name="name"
+              value={data.name}
+              id="outlined-basic"
+              label="Username"
+              variant="outlined"
+            />
+            <br />
+          </>
+        )}
+
+        <TextField
+          onChange={changeHandler}
+          name="email"
+          value={data.email}
+          id="outlined-basic"
+          label="Email"
+          variant="outlined"
+        />
+        <br />
+
+        <TextField
+          onChange={changeHandler}
+          name="password"
+          value={data.password}
+          id="outlined-basic"
+          label="Password"
+          type="password"
+          variant="outlined"
+          autoComplete="current-password"
+        />
+        <br />
+        <Button
+          onClick={isSignUp ? loginHandler : signUpHandler}
+          id="login-button"
+          variant="contained"
+          className="font-bold"
+        >
+          {isSignUp ? "LOGIN" : "SIGN UP"}
+        </Button>
+        <span className="font-bold text-black text-sm">
+          {!isSignUp ? "Already have an Account? " : "Don't have an Account? "}
+          <a
+            href="#"
+            className="font-bold text-black text-sm underline"
+            onClick={handleToggle}
+          >
+            {" "}
+            {!isSignUp ? "Login" : "Sign Up"}
+          </a>
+        </span>
+      </div>
+    </div>
+  );
 };
 
 export default Auth;

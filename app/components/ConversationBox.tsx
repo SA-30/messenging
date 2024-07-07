@@ -115,7 +115,11 @@ const ConversationBox: React.FC<ConversationListProps> = ({
                 text-xs 
                 truncate  
                 text-gray-500
-                ${hasSeen ? "text-gray-500" : "text-slate-900  font-medium"}
+                ${
+                  hasSeen
+                    ? "text-gray-500"
+                    : "text-slate-900 dark:text-slate-200 font-medium"
+                }
         `}
           >
             {lastMessageText}

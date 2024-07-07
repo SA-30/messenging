@@ -16,7 +16,7 @@ interface IMessageBox {
 const MessageBox: React.FC<IMessageBox> = ({ data, isLast }) => {
   const [imageModelOpen, setImageModelOpen] = useState(false);
   const userData = useUserData();
-  const isOwn = userData?.email === data?.sender?.email;
+  const isOwn = data.isOwn || userData?.email === data?.sender?.email;
   const seenList = (data.seen || [])
     .filter((user) => user.email !== data?.sender?.email)
     .map((user) => user.name)
@@ -56,12 +56,12 @@ const MessageBox: React.FC<IMessageBox> = ({ data, isLast }) => {
               width="100"
               src={data.image}
               className="
-                                object-cover cursor-pointer
-                                hover:scale-110 transition
-                            "
+                object-cover cursor-pointer
+                hover:scale-110 transition
+            "
             />
           ) : (
-            <div className="text-sm ">{data.body}</div>
+            <div className="text-sm">{data.body}</div>
           )}
         </div>
         {isLast && isOwn && seenList.length > 0 && (

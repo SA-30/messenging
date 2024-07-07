@@ -1,27 +1,27 @@
-'use client'
+"use client";
 
 import { User } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react"
+import React, { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import config from "../helpers/config";
 import toast from "react-hot-toast";
 import Model from "./Model";
 import Select from "./Select";
 interface IGroupChatModel {
-    isOpen?: boolean;
-    onClose: () => void;
-    users: User[];
+  isOpen?: boolean;
+  onClose: () => void;
+  users: User[];
 }
 
 const GroupChatModel: React.FC<IGroupChatModel> = ({
-    isOpen,
-    onClose,
-    users,
+  isOpen,
+  onClose,
+  users,
 }) => {
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -31,49 +31,55 @@ const GroupChatModel: React.FC<IGroupChatModel> = ({
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      name: '',
+      name: "",
       members: [],
     },
-  })
+  });
 
-  const members = watch('members')
+  const members = watch("members");
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setIsLoading(true)
+    setIsLoading(true);
 
-    axios.post('/api/accessChat',{
-      ...data, isGroup: true
-    }, config)
-     .then(() => {
-        router.refresh()
-        onClose()
+    axios
+      .post(
+        "/api/accessChat",
+        {
+          ...data,
+          isGroup: true,
+        },
+        config
+      )
+      .then(() => {
+        router.refresh();
+        onClose();
       })
-     .catch((err) => {
+      .catch((err) => {
         // if (err.status === 400) toast.error("Group length must be greater than 2")
-        toast.error("Select more members")
+        toast.error("Select more members");
       })
       .finally(() => {
-        setIsLoading(false)
-      })
-  }
+        setIsLoading(false);
+      });
+  };
 
   return (
     <Model isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
+            <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-slate-200">
               Create a group chat
             </h2>
             <div className="mt-10 flex flex-col gap-y-8">
               <div className="mt-5">
-                <label 
-                  htmlFor="name" 
-                  className="block mb-1 text-sm font-medium leading-6 text-gray-900"
+                <label
+                  htmlFor="name"
+                  className="block mb-1 text-sm font-medium leading-6 text-gray-900 dark:text-slate-200"
                 >
                   Name
                 </label>
-                <input 
+                <input
                   disabled={isLoading}
                   id="name"
                   type="text"
@@ -83,26 +89,26 @@ const GroupChatModel: React.FC<IGroupChatModel> = ({
                 />
               </div>
               <div>
-                <Select 
+                <Select
                   disabled={isLoading}
                   label="Members"
                   value={members}
-                  onChange={(value) => setValue('members', value, {
-                    shouldValidate: true,
-                  })}
-                  options={
-                    users?.map((user) => ({
-                      label: user.name,
-                      value: user.id,
-                    }))
+                  onChange={(value) =>
+                    setValue("members", value, {
+                      shouldValidate: true,
+                    })
                   }
+                  options={users?.map((user) => ({
+                    label: user.name,
+                    value: user.id,
+                  }))}
                 />
               </div>
             </div>
           </div>
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button 
+          <button
             disabled={isLoading}
             onClick={onClose}
             className="
@@ -110,24 +116,26 @@ const GroupChatModel: React.FC<IGroupChatModel> = ({
             text-gray-600 hover:text-white
             font-semibold text-sm
             transition hover:bg-gray-500
-          ">
+          "
+          >
             Cancel
           </button>
-          <button 
+          <button
             disabled={isLoading}
-            type='submit'
+            type="submit"
             className="
             p-2 rounded
             bg-orange-600 text-white
             font-semibold text-sm
             transition hover:bg-orange-500
-          ">
+          "
+          >
             Create Group
           </button>
         </div>
       </form>
     </Model>
-  )
-}
+  );
+};
 
-export default GroupChatModel
+export default GroupChatModel;
