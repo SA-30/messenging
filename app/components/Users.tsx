@@ -84,29 +84,38 @@ function Users() {
       flex-col gap-[10px] 
       p-3 h-[90vh]
     "
-    >
-      <div className="rounded-[10px] p-5 grid grid-cols-2 gap-5 box-shadow1 hide-scrollbar dark:bg-[#333333] dark:shadow-sm overflow-y-auto h-full bg-white">
-        {users.map((user: any, index) => (
-          <div
-            className="p-2 h-[60px] dark:bg-[#222222]  box-shadow2 rounded-[10px] flex items-center justify-between"
-            key={index}
-          >
-            <div className="flex items-center gap-2">
-              <Avatar user={user} />
-              <p className="text-black dark:text-[#999999]">{user?.name}</p>
-            </div>
-            <IconButton
-              onClick={() => {
-                handleClick(user);
-              }}
-            >
-              <PersonAddAlt1Icon className={"dark:text-[#999999]"} />
-            </IconButton>
-          </div>
-        ))}
-      </div>
-    </div>
+    ></div>
   );
+  // return (
+  //   <div
+  //     className="
+  //     dark:dark flex
+  //     flex-col gap-[10px]
+  //     p-3 h-[90vh]
+  //   "
+  //   >
+  //     <div className="rounded-[10px] p-5 grid grid-cols-2 gap-5 box-shadow1 hide-scrollbar dark:bg-[#333333] dark:shadow-sm overflow-y-auto h-full bg-white">
+  //       {users.map((user: any, index) => (
+  //         <div
+  //           className="p-2 h-[60px] dark:bg-[#222222]  box-shadow2 rounded-[10px] flex items-center justify-between"
+  //           key={index}
+  //         >
+  //           <div className="flex items-center gap-2">
+  //             <Avatar user={user} />
+  //             <p className="text-black dark:text-[#999999]">{user?.name}</p>
+  //           </div>
+  //           <IconButton
+  //             onClick={() => {
+  //               handleClick(user);
+  //             }}
+  //           >
+  //             <PersonAddAlt1Icon className={"dark:text-[#999999]"} />
+  //           </IconButton>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   </div>
+  // );
 }
 
 export default Users;
