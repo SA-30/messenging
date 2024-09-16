@@ -4,14 +4,10 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getCookie } from "../helpers/cookieHelpers";
 import axios from "axios";
-import useTokenExpireCheck from "../hooks/useTokenExpireCheck";
-import { useRouter } from "next/navigation";
 
 const Welcome = () => {
   const [userInfo, setUserInfo] = useState<any>(null);
   const cookie = getCookie("token");
-  const router = useRouter();
-  const isTokenValid = useTokenExpireCheck();
 
   useEffect(() => {
     if (cookie) {
@@ -32,11 +28,6 @@ const Welcome = () => {
         });
     }
   }, [cookie]);
-
-  if (isTokenValid) {
-    router.push("/");
-    return;
-  }
 
   return (
     <div className=" py-5 sm:py-[10px] px-[10px] sm:px-[10px]  h-full">
