@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useState, ChangeEvent, MouseEvent } from "react";
 import { toast } from "react-hot-toast";
 import { getCookie } from "../helpers/cookieHelpers";
+import useTokenExpireCheck from "../hooks/useTokenExpireCheck";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(true);
@@ -15,8 +16,14 @@ const Auth = () => {
 
   const navigate = useRouter();
 
-  const token = getCookie("token");
-  if (token) navigate.push("/chatter");
+  // check for token expiration
+  const isTokenValid = useTokenExpireCheck();
+  if (!isTokenValid) {
+    navigate.push("/chatter");
+    return;
+  }
+  // const token = getCookie("token");
+  // if (token) navigate.push("/chatter");
 
   const handleToggle = () => {
     setIsSignUp(!isSignUp);

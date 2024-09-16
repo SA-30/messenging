@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateToken } from "../adminMiddleware";
-import Prisma from "../../lib/prisma";
+import { authenticateToken } from "../../adminMiddleware";
+import Prisma from "../../../lib/prisma";
 
 export async function GET(req: NextRequest) {
   const decodedToken: any = await authenticateToken(req);
+
   if (!decodedToken) {
     return;
   }
@@ -19,7 +20,6 @@ export async function GET(req: NextRequest) {
         },
       },
     });
-    return NextResponse.json(users, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: "Internal Server Error" },
