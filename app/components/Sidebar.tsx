@@ -28,6 +28,8 @@ const Sidebar = () => {
   const [colorMode, setColorMode] = useColorMode();
   const [users, setUsers] = useState<any>();
   const [user, setUser] = useState<any>();
+  const [keyword, setKeyword] = useState("");
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
@@ -36,6 +38,17 @@ const Sidebar = () => {
     toast.success("User logged out");
     router.push("/");
   };
+
+  // Debouncing logic
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedKeyword(keyword);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [keyword]);
 
   useEffect(() => {
     axios
@@ -71,6 +84,10 @@ const Sidebar = () => {
     fetchUsers();
   }, []);
 
+  const handleUsersSearch = (e: any) => {
+    setKeyword(e.target.value);
+  };
+
   return (
     <>
       <SettingModal
@@ -100,7 +117,7 @@ const Sidebar = () => {
         </div>
 
         {/* Search Bar */}
-        <div
+        {/* <div
           className={
             "sb-search dark:text-white dark:bg-[#333333] dark:shadow-sm"
           }
@@ -109,10 +126,12 @@ const Sidebar = () => {
             <SearchIcon className="dark:text-white" />
           </IconButton>
           <input
+            value={keyword}
+            onChange={handleUsersSearch}
             placeholder="Search"
             className="search-box w-full dark:bg-[#333333] dark:shadow-sm"
           />
-        </div>
+        </div> */}
 
         {/* List of Chats */}
         <ConversationList users={users} initialItems={conversations} />
